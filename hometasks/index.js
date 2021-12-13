@@ -18,11 +18,6 @@ if (start > end) {
   return "error";
 }
 
-if (end > 100) {
-  console.log("Введите второе число меньше 100");
-  return "error";
-}
-
 let contain = 0;
 let signal = 0;
 for (let i = start; i <= end; i++) {
