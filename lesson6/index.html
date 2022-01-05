@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Socket</title>
+    <script src="https://cdn.socket.io/4.2.0/socket.io.min.js" integrity="sha384-PiBR5S00EtOj2Lto9Uu81cmoyZqR57XcOna1oAuVuIEjzj0wpqDVfD0JA9eXlRsj" crossorigin="anonymous"></script>
+</head>
+<body>
+<input id="input" type="text" autofocus>
+<button id="button">Send</button>
+<div id="messages"></div>
+<h1>Users Online</h1>
+<div id="users"></div>
+<script>
+    const socket = io('localhost:5555');
+    const messagesBlock = document.querySelector('#messages');
+    const sendButton = document.querySelector('#button');
+    const input = document.querySelector('#input');
+    const users = document.querySelector('#users');
+
+    sendButton.addEventListener('click', () => {
+        const data = {
+            message: input.value,
+        };
+
+        socket.emit('client-msg', data);
+        input.value = '';
+    })
+
+    socket.on('connect', () => {
+        console.log('Connected');
+    });
+
+    socket.on('server-msg', (data) => {
+        messagesBlock.insertAdjacentHTML('afterbegin', `<div><div>User:${data.userId}</div><div>${data.message}</div></div>`);
+    });
+    socket.on('userList-msg', (data) => {
+
+        let user = data.userList.reduce((previousValue, currentValue) => previousValue + `<div>${currentValue}</div>`, "")
+        users.innerHTML=  user;
+    });
+</script>
+</body>
+</html>
